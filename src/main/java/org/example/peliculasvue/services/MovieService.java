@@ -233,6 +233,7 @@ public class MovieService {
             movie.setDirector(movieRequestDTO.getDirector());
             movie.setDuration(movieRequestDTO.getDuration());
             movie.setGender(movieRequestDTO.getGender());
+            movie.setPublishDate(movieRequestDTO.getPublishDate());
 
             Movie movieResults = movieRepository.save(movie);
             movieResponseDTO = ValueMapper.convertToDTO(movieResults);
