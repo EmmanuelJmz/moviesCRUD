@@ -40,7 +40,6 @@ public class MovieController {
     public ResponseEntity<ApiResponse> createNewMovie(@RequestPart @Valid MovieRequestDTO movieRequestDTO, @RequestParam
             ("file") MultipartFile multipartFile){
         log.info("MovieController::CreateNewMovie request body {}", ValueMapper.jsonAsString(movieRequestDTO));
-        String imageUrl = "xd";
         String imageUrl = imageService.upload(multipartFile);
         movieRequestDTO.setUrlImage(imageUrl);
         MovieResponseDTO movieResponseDTO = movieService.createNewMovie(movieRequestDTO, multipartFile);
