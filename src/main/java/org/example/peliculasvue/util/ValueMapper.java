@@ -2,9 +2,11 @@ package org.example.peliculasvue.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.peliculasvue.dto.MovieRequestDTO;
 import org.example.peliculasvue.dto.MovieResponseDTO;
 import org.example.peliculasvue.entity.Movie;
+
 
 public class ValueMapper {
     public static Movie convertToEntity(MovieRequestDTO movieRequestDTO){
@@ -15,6 +17,7 @@ public class ValueMapper {
         movie.setGender(movieRequestDTO.getGender());
         movie.setCategory(movieRequestDTO.getCategory());
         movie.setPublishDate(movieRequestDTO.getPublishDate());
+        movie.setUrlImage(movieRequestDTO.getUrlImage());
         return movie;
     }
 
@@ -27,15 +30,19 @@ public class ValueMapper {
         movieResponseDTO.setGender(movie.getGender());
         movieResponseDTO.setCategory(movie.getCategory());
         movieResponseDTO.setPublishDate(movie.getPublishDate());
+        movieResponseDTO.setUrlImage(movie.getUrlImage());
         return movieResponseDTO;
     }
 
-    public static String jsonAsString(Object o){
+    public static String jsonAsString(Object obj) {
         try {
-            return new ObjectMapper().writeValueAsString(o);
-        } catch (JsonProcessingException e){
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            return objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return null;
     }
+
 }

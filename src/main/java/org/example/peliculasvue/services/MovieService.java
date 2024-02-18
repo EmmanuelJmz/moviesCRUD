@@ -11,6 +11,8 @@ import org.example.peliculasvue.exception.MovieServiceBusinessException;
 import org.example.peliculasvue.util.ValueMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -24,7 +26,7 @@ public class MovieService {
 
     private MovieRepository movieRepository;
 
-    public MovieResponseDTO createNewMovie(MovieRequestDTO movieRequestDTO) throws MovieServiceBusinessException {
+    public MovieResponseDTO createNewMovie(MovieRequestDTO movieRequestDTO, MultipartFile multipartFile) throws MovieServiceBusinessException {
         MovieResponseDTO movieResponseDTO;
 
         try {

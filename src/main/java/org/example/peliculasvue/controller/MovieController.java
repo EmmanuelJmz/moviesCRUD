@@ -6,12 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.peliculasvue.dto.ApiResponse;
 import org.example.peliculasvue.dto.MovieRequestDTO;
 import org.example.peliculasvue.dto.MovieResponseDTO;
+import org.example.peliculasvue.services.ImageService;
 import org.example.peliculasvue.services.MovieService;
 import org.example.peliculasvue.util.ValueMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,11 +28,22 @@ public class MovieController {
 
     private MovieService movieService;
 
-    @PostMapping("/add")
-    public ResponseEntity<ApiResponse> createNewMovie(@RequestBody @Valid MovieRequestDTO movieRequestDTO){
+
+    private final ImageService imageService;
+
+    @PostMapping
+    public String upload(@RequestParam("file") MultipartFile multipartFile) {
+        return imageService.upload(multipartFile);
+    }
+
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse> createNewMovie(@RequestPart @Valid MovieRequestDTO movieRequestDTO, @RequestParam
+            ("file") MultipartFile multipartFile){
         log.info("MovieController::CreateNewMovie request body {}", ValueMapper.jsonAsString(movieRequestDTO));
 
-        MovieResponseDTO movieResponseDTO = movieService.createNewMovie(movieRequestDTO);
+        String imageUrl = imageService.upload(multipartFile);
+        movieRequestDTO.setUrlImage(imageUrl);
+        MovieResponseDTO movieResponseDTO = movieService.createNewMovie(movieRequestDTO, multipartFile);
 
         ApiResponse<MovieResponseDTO> responseDTO = ApiResponse
                 .<MovieResponseDTO>builder()
@@ -38,6 +52,7 @@ public class MovieController {
                 .build();
 
         log.info("MovieController::CreateNewMovie response {}", ValueMapper.jsonAsString(responseDTO));
+        log.info("Received file: {}", multipartFile.getOriginalFilename());
 
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }

@@ -1,5 +1,6 @@
 package org.example.peliculasvue.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,6 +31,10 @@ public class MovieRequestDTO {
     @NotBlank(message = "La categoria no puede ser null o vacio")
     private String category;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "La fecha de publicación no puede ser null o vacio")
     private LocalDate publishDate;
+
+    @NotBlank(message = "La pelicula debe tener una imagen")
+    private String urlImage;
 }
